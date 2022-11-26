@@ -2,7 +2,6 @@ from sqlalchemy import (
     Column,
     Integer,
 )
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import (
     declared_attr,
     declarative_base,
@@ -20,4 +19,3 @@ class Base:
 
 
 Base = declarative_base(cls=Base)
-engine = create_async_engine(url=config.DB_URL_ASYNC, echo=config.DB_ECHO)
