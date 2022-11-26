@@ -14,7 +14,7 @@ class Author(Base):
         nullable=False,
         unique=True,
     )
-    biography = Column(
+    about = Column(
         Text,
     )
 
