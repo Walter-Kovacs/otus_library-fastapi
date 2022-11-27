@@ -21,27 +21,15 @@ router = APIRouter(
 
 
 @router.get('', response_model=list[AuthorOut])
-async def get_all_authors(session: AsyncSession = Depends(get_session)) -> list[AuthorOut]:
-    authors: list[Author] = await crud.get_all_authors(session)
-    return [
-        AuthorOut(
-            name=author.name,
-            about=author.about,
-            id=author.id,
-        )
-        for author in authors
-    ]
+async def get_all_authors(session: AsyncSession = Depends(get_session)) -> list[Author]:
+    return await crud.get_all_authors(session)
 
 
 @router.get('/{author_id}', response_model=AuthorOut)
-async def get_author_by_id(author_id: int, session: AsyncSession = Depends(get_session)) -> AuthorOut:
+async def get_author_by_id(author_id: int, session: AsyncSession = Depends(get_session)) -> Author:
     author: Author = await crud.get_author_by_id(session, author_id)
     if author:
-        return AuthorOut(
-            name=author.name,
-            about=author.about,
-            id=author.id,
-        )
+        return author
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -50,10 +38,5 @@ async def get_author_by_id(author_id: int, session: AsyncSession = Depends(get_s
 
 
 @router.post('', response_model=AuthorOut, status_code=status.HTTP_201_CREATED)
-async def add_author(author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> AuthorOut:
-    author: Author = await crud.create_author(session, author_in)
-    return AuthorOut(
-        name=author.name,
-        about=author.about,
-        id=author.id,
-    )
+async def add_author(author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> Author:
+    return await crud.create_author(session, author_in)

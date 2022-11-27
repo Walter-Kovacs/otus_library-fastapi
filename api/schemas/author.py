@@ -13,6 +13,9 @@ class BaseAuthor(BaseModel):
 class AuthorOut(BaseAuthor):
     id: int
 
+    class Config:
+        orm_mode = True
+
 
 class AuthorIn(BaseAuthor):
     pass
