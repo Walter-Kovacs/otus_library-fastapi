@@ -28,6 +28,11 @@ async def get_all_authors(order_by: str = "", session: AsyncSession = Depends(ge
     return await crud.get_all_authors(session)
 
 
+@router.post('', response_model=AuthorOut, status_code=status.HTTP_201_CREATED)
+async def add_author(author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> Author:
+    return await crud.create_author(session, author_in)
+
+
 @router.get('/{author_id}', response_model=AuthorOut)
 async def get_author_by_id(author_id: int, session: AsyncSession = Depends(get_session)) -> Author:
     author: Author = await crud.get_author_by_id(session, author_id)
@@ -38,11 +43,6 @@ async def get_author_by_id(author_id: int, session: AsyncSession = Depends(get_s
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Author id={author_id} does not exist.",
     )
-
-
-@router.post('', response_model=AuthorOut, status_code=status.HTTP_201_CREATED)
-async def add_author(author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> Author:
-    return await crud.create_author(session, author_in)
 
 
 @router.patch('/{author_id}', response_model=AuthorOut)
