@@ -27,6 +27,14 @@ async def get_all_authors(session: AsyncSession) -> list[Author]:
     return authors
 
 
+async def get_all_authors_order_by_name(session: AsyncSession) -> list[Author]:
+    stmt = select(Author).order_by(Author.name)
+    result: Result = await session.execute(stmt)
+    authors = result.scalars().all()
+
+    return authors
+
+
 async def get_author_by_id(session: AsyncSession, author_id: int) -> Author | None:
     stmt = select(Author).where(Author.id == author_id)
     result: Result = await session.execute(stmt)

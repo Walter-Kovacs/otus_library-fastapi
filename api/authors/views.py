@@ -21,7 +21,9 @@ router = APIRouter(
 
 
 @router.get('', response_model=list[AuthorOut])
-async def get_all_authors(session: AsyncSession = Depends(get_session)) -> list[Author]:
+async def get_all_authors(order_by: str = "", session: AsyncSession = Depends(get_session)) -> list[Author]:
+    if order_by == "name":
+        return await crud.get_all_authors_order_by_name(session)
     return await crud.get_all_authors(session)
 
 
