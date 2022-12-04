@@ -35,10 +35,27 @@ async def get_author_by_id(author_id: int, session: AsyncSession = Depends(get_s
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail=f'Author id={author_id} does not exist.',
+        detail=f"Author id={author_id} does not exist.",
     )
 
 
 @router.post('', response_model=AuthorOut, status_code=status.HTTP_201_CREATED)
 async def add_author(author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> Author:
     return await crud.create_author(session, author_in)
+
+
+@router.patch('/{author_id}', response_model=AuthorOut)
+async def update_author(author_id: int, author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> Author:
+    author: Author = await crud.update_author(session, author_id, author_in)
+    if author:
+        return author
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Author id={author_id} does not exist.",
+    )
+
+
+@router.delete('/{author_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_author(author_id: int, session: AsyncSession = Depends(get_session)):
+    await crud.delete_author(session, author_id)
