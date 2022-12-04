@@ -6,7 +6,7 @@ from pydantic import (
 
 
 class BaseAuthor(BaseModel):
-    name: constr(min_length=1, max_length=100) = Field(..., example='Jack London')
+    name: constr(min_length=1, max_length=100) = Field(..., example="Jack London")
     about: str = Field(None)
 
 
@@ -19,3 +19,8 @@ class AuthorOut(BaseAuthor):
 
 class AuthorIn(BaseAuthor):
     pass
+
+
+class AuthorUpdate(BaseModel):
+    name: constr(min_length=1, max_length=100) = Field(None, example="Jack London")
+    about: str = Field(None)

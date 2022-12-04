@@ -5,13 +5,13 @@ from sqlalchemy import select, delete
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.schemas.author import AuthorIn
+from api.schemas.author import AuthorIn, AuthorUpdate
 from models import Author
 
 
 # ***************************** CREATE *****************************
-async def create_author(session: AsyncSession, api_author_in: AuthorIn) -> Author:
-    author = Author(**api_author_in.dict())
+async def create_author(session: AsyncSession, api_author: AuthorIn) -> Author:
+    author = Author(**api_author.dict())
     session.add(author)
     await session.commit()
 
@@ -44,13 +44,15 @@ async def get_author_by_id(session: AsyncSession, author_id: int) -> Author | No
 
 
 # ***************************** UPDATE *****************************
-async def update_author(session: AsyncSession, author_id: int, api_author_in: AuthorIn) -> Author | None:
+async def update_author(session: AsyncSession, author_id: int, api_author: AuthorUpdate) -> Author | None:
     stmt = select(Author).where(Author.id == author_id)
     result: Result = await session.execute(stmt)
     author: Author | None = result.scalar_one_or_none()
     if author is not None:
-        author.name = api_author_in.name
-        author.about = api_author_in.about
+        if api_author.name is not None:
+            author.name = api_author.name
+        if api_author.about is not None:
+            author.about = api_author.about
         session.add(author)
         await session.commit()
 

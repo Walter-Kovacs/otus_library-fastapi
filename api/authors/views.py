@@ -10,6 +10,7 @@ from api.authors import crud
 from api.schemas.author import (
     AuthorIn,
     AuthorOut,
+    AuthorUpdate,
 )
 from models import Author
 from models.db import get_session
@@ -45,8 +46,13 @@ async def add_author(author_in: AuthorIn, session: AsyncSession = Depends(get_se
 
 
 @router.patch('/{author_id}', response_model=AuthorOut)
-async def update_author(author_id: int, author_in: AuthorIn, session: AsyncSession = Depends(get_session)) -> Author:
-    author: Author = await crud.update_author(session, author_id, author_in)
+async def update_author(
+    author_id: int,
+    author_update: AuthorUpdate,
+    session: AsyncSession = Depends(get_session)
+) -> Author:
+
+    author: Author = await crud.update_author(session, author_id, author_update)
     if author:
         return author
 
