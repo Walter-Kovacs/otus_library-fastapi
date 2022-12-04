@@ -161,3 +161,6 @@ cython_debug/
 
 # Docker compose file
 docker-compose.yaml
+
+# TODO file
+.TODO
